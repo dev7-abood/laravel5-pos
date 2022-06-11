@@ -1,22 +1,48 @@
 <div class="modal-dialog" role="document">
-  <div class="modal-content">
+    <div class="modal-content">
 
-    {!! Form::open(['url' => action('AccountController@store'), 'method' => 'post', 'id' => 'payment_account_form' ]) !!}
+        {!! Form::open(['url' => action('AccountController@store'), 'method' => 'post', 'id' => 'payment_account_form' ]) !!}
 
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">@lang( 'account.add_account' )</h4>
-    </div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">@lang( 'account.add_account' )</h4>
+        </div>
 
-    <div class="modal-body">
-            <div class="form-group">
-                {!! Form::label('name', __( 'lang_v1.name' ) .":*") !!}
-                {!! Form::text('name', null, ['class' => 'form-control', 'required','placeholder' => __( 'lang_v1.name' ) ]); !!}
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    {!! Form::label('ar_name', __( 'lang_v1.ar_name' ) .":*") !!}
+                    {!! Form::text('ar_name', null, ['class' => 'form-control', 'required','placeholder' => __( 'lang_v1.name' ) ]); !!}
+                </div>
+
+                <div class="col-lg-6">
+                    {!! Form::label('en_name', __( 'lang_v1.en_name' ) .":*") !!}
+                    {!! Form::text('en_name', null, ['class' => 'form-control', 'required','placeholder' => __( 'lang_v1.en_name' ) ]); !!}
+                </div>
             </div>
-
+            <br/>
             <div class="form-group">
                 {!! Form::label('account_number', __( 'account.account_number' ) .":*") !!}
                 {!! Form::text('account_number', null, ['class' => 'form-control', 'required','placeholder' => __( 'account.account_number' ) ]); !!}
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('transaction_type', __( 'lang_v1.Transaction type' ) .":") !!}
+                <select name="transaction_type" class="form-control select2">
+                    <option value="debtor">{{__('lang_v1.debtor')}}</option>
+                    <option value="creditor">{{__('lang_v1.creditor')}}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('parent_account', __( 'lang_v1.Parent account' ) .":") !!}
+                <select name="parent_id" class="form-control select2">
+                    <option></option>
+                    @foreach($accounts as $account)
+                        <option value="{{$account->id}}">{{app()->getLocale() === 'ar' ? $account->name : $account->en_name}} ({{$account->account_number}})</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">
@@ -55,24 +81,24 @@
                             {!! Form::text('account_details['.$i.'][label]', null, ['class' => 'form-control']); !!}
                         </td>
                         <td>
-                            {!! Form::text('account_details['.$i.'][value]', null, ['class' => 'form-control']); !!}      
+                            {!! Form::text('account_details['.$i.'][value]', null, ['class' => 'form-control']); !!}
                         </td>
                     </tr>
                 @endfor
             </table>
-        
+
             <div class="form-group">
                 {!! Form::label('note', __( 'brand.note' )) !!}
                 {!! Form::textarea('note', null, ['class' => 'form-control', 'placeholder' => __( 'brand.note' ), 'rows' => 4]); !!}
             </div>
-    </div>
+        </div>
 
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">@lang( 'messages.save' )</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">@lang( 'messages.close' )</button>
-    </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">@lang( 'messages.save' )</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">@lang( 'messages.close' )</button>
+        </div>
 
-    {!! Form::close() !!}
+        {!! Form::close() !!}
 
-  </div><!-- /.modal-content -->
+    </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->

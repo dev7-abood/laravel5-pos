@@ -1433,4 +1433,11 @@ return [
     '60_90_days_past_due' => '60-90 days past due',
     'over_90_days_past_due' => 'Over 90 days past due',
     'amount_due' => 'Amount due',
+    "en_name" => "English name",
+    'ar_name' => 'Arabic name',
+    'debtor' => 'Debtor',
+    'creditor' => 'Creditor',
+    'Parent account' => 'Parent account',
+    'Parent account name' => 'Parent account name',
+    'Transaction type' => 'Transaction type'
 ];

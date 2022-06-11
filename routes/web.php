@@ -11,6 +11,10 @@
 |
 */
 
+use App\Account;
+use App\BusinessLocation;
+use Illuminate\Support\Facades\DB;
+
 include_once('install_r.php');
 
 Route::middleware(['setData'])->group(function () {
@@ -418,4 +422,16 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
         ->name('packing.downloadPdf');
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/show-notification/{id}', 'HomeController@showNotification');
+});
+
+Route::get('test', function () {
+    $business_id = session()->get('user.business_id');
+//   return $accounts = Account::query()->addSelect([
+//       'parent_account_ar' => Account::select('ar_name')->whereColumn('accounts.id', '=' ,'accounts.parent_id')->limit(1),
+//       'parent_account_en' => Account::select('en_name')->whereColumn('accounts.id', '=' ,'accounts.parent_id')->limit(1),
+//   ])->find(7);
+
+   return $accounts = Account::query()
+       ->on(DB::select('(select ar_name form accounts where accounts.parent_id = accounts.id limit 1) as ggg'))
+       ->find(7);
 });

@@ -58,7 +58,7 @@
                                         {!! Form::select('account_status', ['active' => __('business.is_active'), 'closed' => __('account.closed')], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'account_status']); !!}
                                     </div>
                                     <div class="col-md-8">
-                                        <button type="button" class="btn btn-primary btn-modal pull-right" 
+                                        <button type="button" class="btn btn-primary btn-modal pull-right"
                                             data-container=".account_model"
                                             data-href="{{action('AccountController@create')}}">
                                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
@@ -72,6 +72,8 @@
                                         <thead>
                                             <tr>
                                                 <th>@lang( 'lang_v1.name' )</th>
+                                                <th>@lang( 'lang_v1.Transaction type' )</th>
+                                                <th>@lang( 'lang_v1.Parent account name' )</th>
                                                 <th>@lang( 'lang_v1.account_type' )</th>
                                                 <th>@lang( 'lang_v1.account_sub_type' )</th>
                                                 <th>@lang('account.account_number')</th>
@@ -86,7 +88,7 @@
                                             <tr class="bg-gray font-17 footer-total text-center">
                                                 <td colspan="5"><strong>@lang('sale.total'):</strong></td>
                                                 <td class="footer_total_balance"></td>
-                                                <td colspan="3"></td>
+                                                <td colspan="5"></td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -298,7 +300,9 @@
                                 "searchable": false
                             }],
                         columns: [
-                            {data: 'name', name: 'accounts.name'},
+                            {data: 'name', name: 'accounts.name', searchable: true},
+                            {data: 'transaction_type', name: 'accounts.transaction_type'},
+                            {data: 'parent_name', name: 'parent_name', orderable: false, searchable: false},
                             {data: 'parent_account_type_name', name: 'pat.name'},
                             {data: 'account_type_name', name: 'ats.name'},
                             {data: 'account_number', name: 'accounts.account_number'},

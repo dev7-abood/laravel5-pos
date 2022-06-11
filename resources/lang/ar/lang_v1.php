@@ -1349,4 +1349,11 @@ return [
 "zatca_qr_help"=>"لبلد المملكة العربية السعودية",
 "customer_irrespective_of_sell"=>"عرض العملاء بغض النظر عن بيعهم",
 "img_url_help_text"=>"أو URL للصورة",
+ "en_name" => "الاسم بالانجليزية",
+ 'ar_name' => 'الاسم بالعربية',
+ 'debtor' => 'مدين',
+ 'creditor' => 'دائن',
+ 'Parent account' => 'الحساب الاعلى',
+ 'Parent account name' => 'إسم الحساب الاعلى',
+ 'Transaction type' => 'طبيعة الحساب'
 ];
