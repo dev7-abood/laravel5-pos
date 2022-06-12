@@ -455,6 +455,11 @@ class AdminSidebarMenu
                             __('account.payment_account_report'),
                             ['icon' => 'fa fas fa-file-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment-account-report']
                         );
+                        $sub->url(
+                            action('CostCenterController@index'),
+                            __('account.Cost center'),
+                            ['icon' => 'fa fas fa-file-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'cost-center']
+                        );
                     },
                     ['icon' => 'fa fas fa-money-check-alt']
                 )->order(50);

@@ -50,4 +50,5 @@ return [
     'link_account' => 'Link Account',
     'account_linked_success' => 'Account linked successfully',
     'view_details' => 'View Details',
+    'Cost center' => 'Cost center',
 ];

@@ -1439,5 +1439,9 @@ return [
     'creditor' => 'Creditor',
     'Parent account' => 'Parent account',
     'Parent account name' => 'Parent account name',
-    'Transaction type' => 'Transaction type'
+    'Transaction type' => 'Transaction type',
+    'Center name' => 'Center name',
+    'Arabic name' => 'Arabic name',
+    'English name' => 'English name',
+    'Actions' => 'Actions'
 ];

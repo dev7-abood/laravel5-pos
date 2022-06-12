@@ -50,4 +50,5 @@ return [
 "link_account" => "ربط بحساب",
 "account_linked_success" => "تم ربط الحساب بنجاح",
 "view_details" => "عرض التفاصيل",
+'Cost center' => 'مراكز التكلفة',
 ];
