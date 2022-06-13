@@ -51,4 +51,10 @@ return [
     'account_linked_success' => 'Account linked successfully',
     'view_details' => 'View Details',
     'Cost center' => 'Cost center',
+    'Add cost center' => 'Add cost center',
+    'Edit cost center' => 'Edit cost center',
+    'Name' => 'Name',
+    'Cost center created successfully' => 'Cost center created successfully',
+    'Cost center updated successfully' => 'Cost center updated successfully',
+    'Cost center deleted successfully' => 'Cost center deleted successfully'
 ];

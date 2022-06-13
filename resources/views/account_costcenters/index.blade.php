@@ -1,6 +1,15 @@
 @extends('layouts.app')
 @section('title', __('account.Cost center'))
 
+@section('css')
+    <style>
+    .btn-group {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+@endsection
 @section('content')
     <section class="content-header">
         <h1>@lang('account.Cost center')
@@ -28,9 +37,16 @@
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#other_accounts" data-toggle="tab">
-                                    <i class="fa fa-book"></i> <strong>@lang('account.accounts')</strong>
+                                    <i class="fa fa-book"></i> <strong>مراكز التكلفة</strong>
                                 </a>
                             </li>
+
+                            <li class="">
+                                <a href="#costs-centers-delete" data-toggle="tab">
+                                    <i class="fa fa-book"></i> <strong>مراكز التكلفة المحذوفة</strong>
+                                </a>
+                            </li>
+
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="other_accounts">
@@ -38,30 +54,48 @@
                                     <div class="col-md-12">
                                         @component('components.widget')
                                             <div class="col-md-4">
-                                                {!! Form::select('account_status', ['active' => __('business.is_active'), 'closed' => __('account.closed')], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'account_status']); !!}
                                             </div>
                                             <div class="col-md-8">
                                                 <button type="button" class="btn btn-primary btn-modal pull-right"
                                                         data-container=".account_model"
-                                                        data-href="{{action('AccountController@create')}}">
+                                                        data-href="{{action('CostCenterController@create')}}">
                                                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                                             </div>
                                         @endcomponent
                                     </div>
                                     <div class="col-sm-12">
                                         <br>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-striped" id="datatable">
+                                        <div class="table-responsive w-100">
+                                            <table class="table table-striped table-bordered dt-responsive nowrap w-100" id="datatable">
                                                 <thead>
                                                 <tr>
                                                     <th>@lang( 'lang_v1.Center name' )</th>
                                                     <th>@lang( 'lang_v1.Arabic name' )</th>
                                                     <th>@lang( 'lang_v1.English name' )</th>
+                                                    <th>@lang( 'lang_v1.Parent name' )</th>
                                                     <th>@lang( 'lang_v1.Actions' )</th>
                                                 </tr>
                                                 </thead>
                                             </table>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="costs-centers-delete">
+                                <div class="container">
+                                    <br>
+                                    <div class="table-responsive w-100">
+                                        <table class="table table-striped table-bordered dt-responsive nowrap w-100" id="softDelete">
+                                            <thead>
+                                            <tr>
+                                                <th>@lang( 'lang_v1.Center name' )</th>
+                                                <th>@lang( 'lang_v1.Arabic name' )</th>
+                                                <th>@lang( 'lang_v1.English name' )</th>
+                                                <th>@lang( 'lang_v1.Parent name' )</th>
+                                                <th>@lang( 'lang_v1.Actions' )</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -82,22 +116,189 @@
 @endsection
 
 @section('javascript')
-    // <link href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
-    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
     <script>
-        $('#datatable').DataTable({
+        let datatable = $('#datatable').DataTable({
             processing : true,
+            autoWidth : false,
             serverSide : true,
             ajax: '{{route('cost_center.datatable')}}',
+            @if(app()->getLocale() == 'ar')
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/ar.json'
+            },
+            @endif
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    charset: 'UTF-8',
+                    text: '<i class="fa fa-file-excel" aria-hidden="true"></i>  تصدير إلى Excel</span>',
+                    bom: true,
+                    columnDefs: [ {
+                        targets: -1,
+                        visible: false
+                    }]
+                },
+                {
+                    extend: 'print',
+                    text : '<span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span>',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    text : '<span><i class="fa fa-columns" aria-hidden="true"></i> رؤية العمود</span>',
+                    extend : 'colvis'
+                },
+                {
+                    extend: 'csv',
+                    charset: 'UTF-8',
+                    text: '<i class="fa fa-file-csv" aria-hidden="true"></i> تصدير إلى CSV</span>',
+                    bom: true,
+                    columnDefs: [ {
+                        targets: -1,
+                        visible: false
+                    }]
+                }
+            ],
             columns: [
                 // {data: 'id', name: 'users.id'},
                 {data: 'name', name: 'name'},
                 {data: 'ar_name', name: 'ar_name'},
-                {data: 'en_name', name: 'en_name', searchable: false},
-                {data: 'en_name', name: 'en_name', searchable: false},
+                {data: 'en_name', name: 'en_name'},
+                {data: 'p_name', name: 'p_name'},
+                {data: 'actions', name: 'actions', searchable: false},
                 // {data: 'created_at', name: 'users.created_at'},
                 // {data: 'updated_at', name: 'users.updated_at'}
             ]
         });
     </script>
+    <script>
+        let softDelete = $('#softDelete').DataTable({
+            processing : true,
+            autoWidth : false,
+            serverSide : true,
+            ajax: '{{route('cost_center.softDeletedDatatable')}}',
+            @if(app()->getLocale() == 'ar')
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/ar.json'
+            },
+            @endif
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    charset: 'UTF-8',
+                    text: '<i class="fa fa-file-excel" aria-hidden="true"></i>  تصدير إلى Excel</span>',
+                    bom: true,
+                    columnDefs: [ {
+                        targets: -1,
+                        visible: false
+                    }]
+                },
+                {
+                    extend: 'print',
+                    text : '<span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span>',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    text : '<span><i class="fa fa-columns" aria-hidden="true"></i> رؤية العمود</span>',
+                    extend : 'colvis'
+                },
+                {
+                    extend: 'csv',
+                    charset: 'UTF-8',
+                    text: '<i class="fa fa-file-csv" aria-hidden="true"></i> تصدير إلى CSV</span>',
+                    bom: true,
+                    columnDefs: [ {
+                        targets: -1,
+                        visible: false
+                    }]
+                }
+            ],
+            columns: [
+                // {data: 'id', name: 'users.id'},
+                {data: 'name', name: 'name'},
+                {data: 'ar_name', name: 'ar_name'},
+                {data: 'en_name', name: 'en_name'},
+                {data: 'p_name', name: 'p_name'},
+                {data: 'actions', name: 'actions', searchable: false},
+                // {data: 'created_at', name: 'users.created_at'},
+                // {data: 'updated_at', name: 'users.updated_at'}
+            ]
+        });
+    </script>
+
+    <script>
+        $(document).on('submit', 'form#cost_center_form', function(e){
+            e.preventDefault();
+            var data = $(this).serialize();
+            $.ajax({
+                method: "post",
+                url: $(this).attr("action"),
+                dataType: "json",
+                data: data,
+                success:function(result){
+                    if(result.success == true){
+                        $('div.account_model').modal('hide');
+                        toastr.success(result.msg);
+                        datatable.ajax.reload();
+                        softDelete.ajax.reload();
+                    }else{
+                        toastr.error(result.msg);
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '#delete_button', function(){
+            swal({
+                title: LANG.sure,
+                text: LANG.confirm_delete_user,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    var href = $(this).data('href');
+                    var data = $(this).serialize();
+                    $.ajax({
+                        method: "DELETE",
+                        url: href,
+                        dataType: "json",
+                        data: data,
+                        success: function(result){
+                            if(result.success == true){
+                                toastr.success(result.msg);
+                                datatable.ajax.reload();
+                                softDelete.ajax.reload();
+                            } else {
+                                toastr.error(result.msg);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        function restore (id) {
+            $.ajax({
+                type: "GET",
+                url: `{{route('cost_center.restore')}}/${id}`,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(result){
+                    toastr.success(result.msg);
+                    datatable.ajax.reload();
+                    softDelete.ajax.reload();
+                }
+            });
+        }
+    </script>
+
+
+
 @endsection

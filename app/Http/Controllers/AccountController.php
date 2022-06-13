@@ -124,8 +124,9 @@ class AccountController extends Controller
                         return $name;
                     }
                 })
-                ->editColumn('parent_name', function ($row) {
-                    $account = Account::find($row->parent_id);
+                ->addColumn('parent_name', function ($query) {
+//                   return $query->select('ar_name')->from('accounts')->where($query->id)->limit(1);
+                    $account = Account::find($query->parent_id);
                     if ($account){
                         return app()->getLocale() == 'ar' ? $account->ar_name  .' '. $account->account_number : $account->en_name .' '. $account->account_number;
                     }
@@ -263,8 +264,7 @@ class AccountController extends Controller
                     AccountTransaction::createAccountTransaction($ob_transaction_data);
                 }
 
-                $output = ['success' => true, 'msg' => __("account.account_created_success")
-                ];
+                $output = ['success' => true, 'msg' => __("account.account_created_success")];
             } catch (\Exception $e) {
                 \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 

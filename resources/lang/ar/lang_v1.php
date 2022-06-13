@@ -1359,5 +1359,6 @@ return [
     'Center name' => 'إسم المركز',
     'Arabic name' => 'إسم عربي',
     'English name' => 'إسم انجليزي',
+    'Parent name' => 'إسم الاعلى',
     'Actions' => 'عمليات'
 ];

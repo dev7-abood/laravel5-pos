@@ -329,6 +329,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
         Route::get('/cash-flow', 'AccountController@cashFlow');
         Route::resource('/cost-center', 'CostCenterController');
         Route::get('/cost-center/datatable', ['as' => 'cost_center.datatable', 'uses' => 'CostCenterController@datatable']);
+        Route::get('/cost-center-soft-delete', ['as' => 'cost_center.softDeletedDatatable', 'uses' => 'CostCenterController@softDeletedDatatable']);
+        Route::get('/cost-center-restore/{id?}', ['as' => 'cost_center.restore', 'uses' => 'CostCenterController@restore']);
     });
     
     Route::resource('account-types', 'AccountTypeController');

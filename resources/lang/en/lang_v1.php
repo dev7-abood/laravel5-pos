@@ -1443,5 +1443,6 @@ return [
     'Center name' => 'Center name',
     'Arabic name' => 'Arabic name',
     'English name' => 'English name',
+    'Parent name' => 'Parent name',
     'Actions' => 'Actions'
 ];
