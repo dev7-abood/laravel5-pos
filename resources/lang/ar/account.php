@@ -51,11 +51,22 @@ return [
     "account_linked_success" => "تم ربط الحساب بنجاح",
     "view_details" => "عرض التفاصيل",
     'Cost center' => 'مراكز التكلفة',
+    'Deleted cost centers' => 'مراكز التكلفة المحذوفة',
     'Add cost center' => 'إضافة مركز تكلفة',
     'Edit cost center' => 'تعديل مركز تكلفة',
     'Name' => 'الاسم',
     'Cost center created successfully' => 'تم إنشاء مركز التكلفة بنجاح',
     'Cost center updated successfully' => 'تم تحديث مركز التكلفة بنجاح',
-    'Cost center deleted successfully' => 'تم حذف مركز التكلفة بنجاح'
+    'Cost center filly deleted successfully' => 'تم حذف الكامل لمركز التكلفة بنجاح',
+    'Delete the top account' => 'افرغ قيمة الحساب الاعلى الي قيمة فارغة',
+    'Cost center deleted successfully' => 'تم حذف مركز التكلفة بنجاح',
+    'Complete delete' => 'حذف نهائي',
+    'Delete' => 'حذف',
+    'Active' => 'تفعيل',
+    'Edit' => 'تعديل',
+    'Export to Excel' => 'تصدير إلى Excel',
+    'Print' => 'طباعة',
+    'See column' => 'رؤية العمود',
+    'Export to CSV' => 'تصدير إلى CSV',
 
 ];

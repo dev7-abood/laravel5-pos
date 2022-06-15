@@ -37,13 +37,12 @@
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#other_accounts" data-toggle="tab">
-                                    <i class="fa fa-book"></i> <strong>مراكز التكلفة</strong>
+                                    <i class="fa fa-book"></i> <strong>{{__('account.Cost center')}}</strong>
                                 </a>
                             </li>
-
                             <li class="">
                                 <a href="#costs-centers-delete" data-toggle="tab">
-                                    <i class="fa fa-book"></i> <strong>مراكز التكلفة المحذوفة</strong>
+                                    <i class="fa fa-book"></i> <strong>{{__('account.Deleted cost centers')}}</strong>
                                 </a>
                             </li>
 
@@ -69,7 +68,7 @@
                                             <table class="table table-striped table-bordered dt-responsive nowrap w-100" id="datatable">
                                                 <thead>
                                                 <tr>
-                                                    <th>@lang( 'lang_v1.Center name' )</th>
+{{--                                                    <th>@lang( 'lang_v1.Center name' )</th>--}}
                                                     <th>@lang( 'lang_v1.Arabic name' )</th>
                                                     <th>@lang( 'lang_v1.English name' )</th>
                                                     <th>@lang( 'lang_v1.Parent name' )</th>
@@ -88,7 +87,7 @@
                                         <table class="table table-striped table-bordered dt-responsive nowrap w-100" id="softDelete">
                                             <thead>
                                             <tr>
-                                                <th>@lang( 'lang_v1.Center name' )</th>
+{{--                                                <th>@lang( 'lang_v1.Center name' )</th>--}}
                                                 <th>@lang( 'lang_v1.Arabic name' )</th>
                                                 <th>@lang( 'lang_v1.English name' )</th>
                                                 <th>@lang( 'lang_v1.Parent name' )</th>
@@ -133,7 +132,7 @@
                 {
                     extend: 'excel',
                     charset: 'UTF-8',
-                    text: '<i class="fa fa-file-excel" aria-hidden="true"></i>  تصدير إلى Excel</span>',
+                    text: '<i class="fa fa-file-excel" aria-hidden="true"></i>  {{__('account.Export to Excel')}}</span>',
                     bom: true,
                     columnDefs: [ {
                         targets: -1,
@@ -142,19 +141,19 @@
                 },
                 {
                     extend: 'print',
-                    text : '<span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span>',
+                    text : '<span><i class="fa fa-print" aria-hidden="true"></i> {{__('account.Print')}}</span>',
                     exportOptions: {
                         columns: ':visible'
                     }
                 },
                 {
-                    text : '<span><i class="fa fa-columns" aria-hidden="true"></i> رؤية العمود</span>',
+                    text : '<span><i class="fa fa-columns" aria-hidden="true"></i> {{__('account.Export to Excel')}}</span>',
                     extend : 'colvis'
                 },
                 {
                     extend: 'csv',
                     charset: 'UTF-8',
-                    text: '<i class="fa fa-file-csv" aria-hidden="true"></i> تصدير إلى CSV</span>',
+                    text: '<i class="fa fa-file-csv" aria-hidden="true"></i> {{__('account.Export to CSV')}}</span>',
                     bom: true,
                     columnDefs: [ {
                         targets: -1,
@@ -163,14 +162,10 @@
                 }
             ],
             columns: [
-                // {data: 'id', name: 'users.id'},
-                {data: 'name', name: 'name'},
                 {data: 'ar_name', name: 'ar_name'},
                 {data: 'en_name', name: 'en_name'},
                 {data: 'p_name', name: 'p_name'},
                 {data: 'actions', name: 'actions', searchable: false},
-                // {data: 'created_at', name: 'users.created_at'},
-                // {data: 'updated_at', name: 'users.updated_at'}
             ]
         });
     </script>
@@ -190,7 +185,7 @@
                 {
                     extend: 'excel',
                     charset: 'UTF-8',
-                    text: '<i class="fa fa-file-excel" aria-hidden="true"></i>  تصدير إلى Excel</span>',
+                    text: '<i class="fa fa-file-excel" aria-hidden="true"></i>  {{__('account.Export to Excel')}}</span>',
                     bom: true,
                     columnDefs: [ {
                         targets: -1,
@@ -199,19 +194,19 @@
                 },
                 {
                     extend: 'print',
-                    text : '<span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span>',
+                    text : '<span><i class="fa fa-print" aria-hidden="true"></i> {{__('account.Print')}}</span>',
                     exportOptions: {
                         columns: ':visible'
                     }
                 },
                 {
-                    text : '<span><i class="fa fa-columns" aria-hidden="true"></i> رؤية العمود</span>',
+                    text : '<span><i class="fa fa-columns" aria-hidden="true"></i> {{__('account.Export to Excel')}}</span>',
                     extend : 'colvis'
                 },
                 {
                     extend: 'csv',
                     charset: 'UTF-8',
-                    text: '<i class="fa fa-file-csv" aria-hidden="true"></i> تصدير إلى CSV</span>',
+                    text: '<i class="fa fa-file-csv" aria-hidden="true"></i> {{__('account.Export to CSV')}}</span>',
                     bom: true,
                     columnDefs: [ {
                         targets: -1,
@@ -221,7 +216,7 @@
             ],
             columns: [
                 // {data: 'id', name: 'users.id'},
-                {data: 'name', name: 'name'},
+                // {data: 'name', name: 'name'},
                 {data: 'ar_name', name: 'ar_name'},
                 {data: 'en_name', name: 'en_name'},
                 {data: 'p_name', name: 'p_name'},
@@ -284,6 +279,37 @@
             });
         });
 
+
+        $(document).on('click', '#force_delete', function(){
+            swal({
+                title: LANG.sure,
+                text: LANG.confirm_delete_user,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    var href = $(this).data('href');
+                    var data = $(this).serialize();
+                    $.ajax({
+                        method: "DELETE",
+                        url: href,
+                        dataType: "json",
+                        data: data,
+                        success: function(result){
+                            if(result.success == true){
+                                toastr.success(result.msg);
+                                datatable.ajax.reload();
+                                softDelete.ajax.reload();
+                            } else {
+                                toastr.error(result.msg);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
         function restore (id) {
             $.ajax({
                 type: "GET",
@@ -298,7 +324,4 @@
             });
         }
     </script>
-
-
-
 @endsection

@@ -8,10 +8,10 @@
             <h4 class="modal-title">@lang( 'account.Edit cost center' )</h4>
         </div>
         <div class="modal-body">
-            <div class="form-group">
-                {!! Form::label('name', __( 'account.Name' ) .":*") !!}
-                {!! Form::text('name', $costCenter->name, ['class' => 'form-control', 'required','placeholder' => __( 'account.Name' ) ]); !!}
-            </div>
+{{--            <div class="form-group">--}}
+{{--                {!! Form::label('name', __( 'account.Name' ) .":*") !!}--}}
+{{--                {!! Form::text('name', $costCenter->name, ['class' => 'form-control', 'required','placeholder' => __( 'account.Name' ) ]); !!}--}}
+{{--            </div>--}}
 
             <div class="row">
                 <div class="col-lg-6">

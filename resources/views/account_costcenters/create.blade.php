@@ -10,10 +10,10 @@
         </div>
 
         <div class="modal-body">
-            <div class="form-group">
-                {!! Form::label('name', __( 'account.Name' ) .":*") !!}
-                {!! Form::text('name', null, ['class' => 'form-control', 'required','placeholder' => __( 'account.Name' ) ]); !!}
-            </div>
+{{--            <div class="form-group">--}}
+{{--                {!! Form::label('name', __( 'account.Name' ) .":*") !!}--}}
+{{--                {!! Form::text('name', null, ['class' => 'form-control', 'required','placeholder' => __( 'account.Name' ) ]); !!}--}}
+{{--            </div>--}}
 
             <div class="row">
                 <div class="col-lg-6">
