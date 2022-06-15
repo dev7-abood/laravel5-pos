@@ -68,5 +68,6 @@ return [
     'Print' => 'طباعة',
     'See column' => 'رؤية العمود',
     'Export to CSV' => 'تصدير إلى CSV',
+    'Account center number' => 'رقم مركز الحساب'
 
 ];

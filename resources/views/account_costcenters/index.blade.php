@@ -71,6 +71,7 @@
 {{--                                                    <th>@lang( 'lang_v1.Center name' )</th>--}}
                                                     <th>@lang( 'lang_v1.Arabic name' )</th>
                                                     <th>@lang( 'lang_v1.English name' )</th>
+                                                    <th>@lang( 'account.Account center number')</th>
                                                     <th>@lang( 'lang_v1.Parent name' )</th>
                                                     <th>@lang( 'lang_v1.Actions' )</th>
                                                 </tr>
@@ -90,6 +91,7 @@
 {{--                                                <th>@lang( 'lang_v1.Center name' )</th>--}}
                                                 <th>@lang( 'lang_v1.Arabic name' )</th>
                                                 <th>@lang( 'lang_v1.English name' )</th>
+                                                <th>@lang( 'account.Account center number' )</th>
                                                 <th>@lang( 'lang_v1.Parent name' )</th>
                                                 <th>@lang( 'lang_v1.Actions' )</th>
                                             </tr>
@@ -164,6 +166,7 @@
             columns: [
                 {data: 'ar_name', name: 'ar_name'},
                 {data: 'en_name', name: 'en_name'},
+                {data: 'account_center_number', name: 'account_center_number'},
                 {data: 'p_name', name: 'p_name'},
                 {data: 'actions', name: 'actions', searchable: false},
             ]
@@ -219,6 +222,7 @@
                 // {data: 'name', name: 'name'},
                 {data: 'ar_name', name: 'ar_name'},
                 {data: 'en_name', name: 'en_name'},
+                {data: 'account_center_number', name: 'account_center_number'},
                 {data: 'p_name', name: 'p_name'},
                 {data: 'actions', name: 'actions', searchable: false},
                 // {data: 'created_at', name: 'users.created_at'},

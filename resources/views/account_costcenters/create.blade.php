@@ -10,10 +10,7 @@
         </div>
 
         <div class="modal-body">
-{{--            <div class="form-group">--}}
-{{--                {!! Form::label('name', __( 'account.Name' ) .":*") !!}--}}
-{{--                {!! Form::text('name', null, ['class' => 'form-control', 'required','placeholder' => __( 'account.Name' ) ]); !!}--}}
-{{--            </div>--}}
+
 
             <div class="row">
                 <div class="col-lg-6">
@@ -26,8 +23,13 @@
                     {!! Form::text('en_name', null, ['class' => 'form-control', 'required','placeholder' => __( 'lang_v1.en_name' ) ]); !!}
                 </div>
             </div>
-            <br/>
 
+            <br/>
+            <div class="form-group">
+                {!! Form::label('account_center_number', __( 'account.Account center number' ) .":*") !!}
+                {!! Form::text('account_center_number', null, ['class' => 'form-control', 'required','placeholder' => __( 'account.Account center number' ) ]); !!}
+            </div>
+            <br/>
 
             <div class="form-group">
                 {!! Form::label('parent_account', __( 'lang_v1.Parent account' ) .":", ['for' => 'parent_id']) !!}

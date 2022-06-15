@@ -19,6 +19,7 @@ class CreateCostCentersTable extends Migration
             $table->string('name')->nullable();
             $table->string('ar_name')->nullable();
             $table->string('en_name')->nullable();
+            $table->string('account_center_number')->nullable();
 
             $table->unsignedBigInteger('parent_id')->index()->nullable();
             $table->foreign('parent_id')->references('id')->on('cost_centers')

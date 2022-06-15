@@ -28,6 +28,7 @@ class CostCenterController extends Controller
     {
         $data = [
         'name' => $request->en_name,
+        'account_center_number' => $request->account_center_number,
         'ar_name' => $request->ar_name,
         'en_name' => $request->en_name,
         'parent_id' => $request->parent_id
@@ -62,8 +63,12 @@ class CostCenterController extends Controller
         return DataTables::of($costCenters)
             ->addColumn('p_name', function ($query) {
                 return $query->parent->name ?? '-';
-            })->addColumn('p_name', function ($query) {
+            })
+            ->addColumn('p_name', function ($query) {
                 return $query->parent->name ?? '-';
+            })
+            ->addColumn('account_center_number', function ($query) {
+                return $query->account_center_number ?? '-';
             })
             ->addColumn('actions', function ($query) {
                 $ac = action('CostCenterController@edit', ['id' => $query->id]);
@@ -86,6 +91,7 @@ class CostCenterController extends Controller
     {
         $constCenter = CostCenter::withTrashed()->find($id);
         $constCenter->name = $request->en_name;
+        $constCenter->account_center_number = $request->account_center_number;
         $constCenter->ar_name = $request->ar_name;
         $constCenter->en_name = $request->en_name;
         $constCenter->parent_id = $request->parent_id;
@@ -106,6 +112,10 @@ class CostCenterController extends Controller
             })->addColumn('p_name', function ($query) {
                 return $query->parent->name ?? '-';
             })
+            ->addColumn('account_center_number', function ($query) {
+                return $query->account_center_number ?? '-';
+            })
+
             ->addColumn('actions', function ($query) {
                 $id = $query->id;
                 $destroy = action('CostCenterController@forceDelete', ['id' => $query->id]);

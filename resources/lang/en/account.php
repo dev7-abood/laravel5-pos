@@ -68,4 +68,5 @@ return [
     'Print' => 'Print',
     'See column' => 'See column',
     'Export to CSV' => 'Export to CSV',
+    'Account center number' => 'Account center number'
 ];
