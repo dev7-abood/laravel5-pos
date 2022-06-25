@@ -11,9 +11,6 @@
 |
 */
 
-use App\Account;
-use App\BusinessLocation;
-use Illuminate\Support\Facades\DB;
 
 include_once('install_r.php');
 
@@ -428,15 +425,76 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/show-notification/{id}', 'HomeController@showNotification');
 });
+use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
+Route::get('test', function () {
+    $data = [
+        'foo' => 'bar'
+    ];
 
-//Route::get('test', function () {
-//    $business_id = session()->get('user.business_id');
-////   return $accounts = Account::query()->addSelect([
-////       'parent_account_ar' => Account::select('ar_name')->whereColumn('accounts.id', '=' ,'accounts.parent_id')->limit(1),
-////       'parent_account_en' => Account::select('en_name')->whereColumn('accounts.id', '=' ,'accounts.parent_id')->limit(1),
-////   ])->find(7);
-//
-//   return $accounts = Account::query()
-//       ->on(DB::select('(select ar_name form accounts where accounts.parent_id = accounts.id limit 1) as ggg'))
-//       ->find(7);
-//});
+    $config = [
+        'setAutoBottomMargin' => 'stretch',
+        'shrink_tables_to_fit' => 1,
+//        'setAutoTopMargin' => 'stretch',
+        'mode'                     => '',
+        'format'                   => 'A4',
+        'default_font_size'        => '12',
+        'default_font'             => 'sans-serif',
+        'margin_left'              => 10,
+        'margin_right'             => 10,
+        'margin_top'               => 10,
+        'margin_bottom'            => 10,
+        'margin_header'            => 0,
+        'margin_footer'            => 0,
+        'orientation'              => 'P',
+        'title'                    => 'Laravel mPDF',
+        'subject'                  => '',
+        'author'                   => '',
+        'watermark'                => '',
+        'show_watermark'           => false,
+        'show_watermark_image'     => false,
+        'watermark_font'           => 'sans-serif',
+        'display_mode'             => 'fullpage',
+        'watermark_text_alpha'     => 0.1,
+        'watermark_image_path'     => '',
+        'watermark_image_alpha'    => 0.2,
+        'watermark_image_size'     => 'D',
+        'watermark_image_position' => 'P',
+        'custom_font_dir'          => '',
+        'custom_font_data'         => [],
+        'auto_language_detection'  => false,
+        'temp_dir'                 => rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR),
+        'pdfa'                     => false,
+        'pdfaauto'                 => false,
+        'use_active_forms'         => false,
+        'arabic-font' => [
+            'R'  => 'arabic-font.ttf',    // regular font
+            'B'  => 'arabic-font.ttf',          // optional: bold font
+            'I'  => 'arabic-font-Light.ttf',    // optional: italic font
+            'BI' => 'arabic-font.ttf',           // optional: bold-italic font
+            'useOTL' => 0xFF,
+            'useKashida' => 75,
+        ]
+    ];
+    $mpdf = new \Mpdf\Mpdf($config);
+
+//    $pdf = PDF::loadView('report.pdf.generate-pdf-purchasing-report', $data);
+//    $pdf->SetFooter('Document Title');
+//    return $pdf->stream('gg.pdf');
+
+//    $mpdf->SetHeader('{PAGENO}');
+    $mpdf->SetHTMLFooter('
+                            <div>
+                            {PAGENO} من {nb}
+                            <hr/>
+                            <p style="padding: 5px 10px;text-align: center;font-weight: bold">المملكة العربية السعودية ، الرياض ، حي النرجس ، طريق أنس بن مالك</p>
+                            <p style="padding: 5px 10px;text-align: center;font-weight: bold">KSA , Riydh , Narjas Abo bakir seddiq street</p>
+                            <p style="padding: 5px 10px;text-align: center;font-weight: bold"><a href="https://www.sahmcloud.com">www.sahmcloud.com</a> , Email: <a style="color: #0c0c0c" href="mailto:info@sahmcloud.com">info@sahmcloud.com</a></p>
+                            <br/>
+                            <br/>
+                            </div>
+                            ');
+    $mpdf->WriteHTML(view('report.pdf.generate-pdf-purchasing-report'));
+  return  $mpdf->Output();
+
+
+});
