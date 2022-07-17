@@ -39,6 +39,9 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
+                <div class="d-flex justify-content-start">
+                    <button id="print" class="btn btn-primary" type="button">Print</button>
+                </div>
                 <table class="table table-bordered table-striped" id="register_report_table">
                     <thead>
                         <tr>
@@ -97,4 +100,72 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script>
+        document.getElementById('print').addEventListener('click', _ => {
+            const keys = [
+                {key: 'created_at', value: '', isTotalValue : true, isHtmlValue : false},
+                {key: 'closed_at', value: '', isTotalValue : true, isHtmlValue : false},
+                {key: 'location_name', value: '', isTotalValue : true, isHtmlValue : false},
+                {key: 'user_name', value: '', isTotalValue : true, isHtmlValue : false},
+                {key: 'total_card_payment', value: '', isTotalValue : true, isHtmlValue : true},
+                {key: 'total_cheque_payment', value: '', isTotalValue : true, isHtmlValue : true},
+                {key: 'total_cash_payment', value: '', isTotalValue : true, isHtmlValue : true},
+                {key: 'total_bank_transfer_payment', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_advance_payment', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_1', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_2', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_3', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_4', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_5', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_6', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_custom_pay_7', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total_other_payment', value: '', isTotalValue : true , isHtmlValue : true},
+                {key: 'total', value: '', isTotalValue : true, isHtmlValue : true},
+            ]
+            register_report_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            let data = []
+
+            function isHTML(str) {
+                const doc = new DOMParser().parseFromString(str, "text/html");
+                return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
+            }
+            console.log(register_report_table.data().toArray())
+            register_report_table.data().map((d, index) => {
+                try {
+                    const innerData = []
+                    keys.map((keyItem, keyIndex) => {
+                        let value = d[keys[keyIndex].key]
+                        const key = keys[keyIndex].key
+                        innerData.push({
+                            key,
+                            value
+                        })
+                    })
+                    data = innerData
+                }catch (err){}
+            }).toArray()
+
+            console.log(data)
+            console.log(keys)
+
+            $.ajax({
+                url: '{{url('/test')}}',
+                dataType: "json",
+                type: "Post",
+                async: true,
+                data: { keys, data },
+                success: function (data) {
+                    console.log(data)
+                },
+            });
+
+
+        })
+    </script>
 @endsection

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae7bc03a4638edfd3baf5071e1365ce6",
+    "content-hash": "c2f3d16b6dd2044cd28130ed7cd9e885",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -1516,6 +1516,55 @@
                 }
             ],
             "time": "2020-05-02T14:45:48+00:00"
+        },
+        {
+            "name": "gufy/pdftohtml-php",
+            "version": "v2.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mgufrone/pdf-to-html.git",
+                "reference": "4b0c2c60d48b8e3e08394a3f130606408e7f7d2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mgufrone/pdf-to-html/zipball/4b0c2c60d48b8e3e08394a3f130606408e7f7d2e",
+                "reference": "4b0c2c60d48b8e3e08394a3f130606408e7f7d2e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "~5",
+                "paquettg/php-html-parser": "~1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4",
+                "satooshi/php-coveralls": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Gufy": "src"
+                },
+                "psr-4": {
+                    "Gufy\\PdfToHtml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mochamad Gufron",
+                    "email": "mgufronefendi@gmail.com"
+                }
+            ],
+            "description": "PDF to HTML converter with PHP using Poppler-utils",
+            "support": {
+                "issues": "https://github.com/mgufrone/pdf-to-html/issues",
+                "source": "https://github.com/mgufrone/pdf-to-html/tree/master"
+            },
+            "abandoned": true,
+            "time": "2016-10-11T21:43:48+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3733,6 +3782,109 @@
             "time": "2022-01-27T09:35:39+00:00"
         },
         {
+            "name": "paquettg/php-html-parser",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paquettg/php-html-parser.git",
+                "reference": "18845e09831dd0772b88b51e788a4f74c701224c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paquettg/php-html-parser/zipball/18845e09831dd0772b88b51e788a4f74c701224c",
+                "reference": "18845e09831dd0772b88b51e788a4f74c701224c",
+                "shasum": ""
+            },
+            "require": {
+                "paquettg/string-encode": "~0.1.0",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.0",
+                "phpunit/phpunit": "~4.8.0",
+                "satooshi/php-coveralls": "~0.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPHtmlParser": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gilles Paquette",
+                    "email": "paquettg@gmail.com",
+                    "homepage": "http://gillespaquette.ca"
+                }
+            ],
+            "description": "An HTML DOM parser. It allows you to manipulate HTML. Find tags on an HTML page with selectors just like jQuery.",
+            "homepage": "https://github.com/paquettg/php-html-parser",
+            "keywords": [
+                "dom",
+                "html",
+                "parser"
+            ],
+            "support": {
+                "issues": "https://github.com/paquettg/php-html-parser/issues",
+                "source": "https://github.com/paquettg/php-html-parser/tree/master"
+            },
+            "time": "2016-04-06T15:24:40+00:00"
+        },
+        {
+            "name": "paquettg/string-encode",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paquettg/string-encoder.git",
+                "reference": "cf08343649701979f581c1601d01247fa3782439"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paquettg/string-encoder/zipball/cf08343649701979f581c1601d01247fa3782439",
+                "reference": "cf08343649701979f581c1601d01247fa3782439",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "stringEncode": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gilles Paquette",
+                    "email": "paquettg@gmail.com",
+                    "homepage": "http://gillespaquette.ca"
+                }
+            ],
+            "description": "Facilitating the process of altering string encoding in PHP.",
+            "homepage": "https://github.com/paquettg/string-encoder",
+            "keywords": [
+                "charset",
+                "encoding",
+                "string"
+            ],
+            "support": {
+                "issues": "https://github.com/paquettg/string-encoder/issues",
+                "source": "https://github.com/paquettg/string-encoder/tree/master"
+            },
+            "time": "2014-05-29T18:38:09+00:00"
+        },
+        {
             "name": "paragonie/random_compat",
             "version": "v9.99.100",
             "source": {
@@ -3944,6 +4096,84 @@
             ],
             "abandoned": "symfony/polyfill-mbstring or symfony/string",
             "time": "2021-01-07T16:38:58+00:00"
+        },
+        {
+            "name": "pelago/emogrifier",
+            "version": "v5.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/emogrifier.git",
+                "reference": "37595a9bb62c3c25969bdd9e8d7dd24c3ac62bc9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/37595a9bb62c3c25969bdd9e8d7dd24c3ac62bc9",
+                "reference": "37595a9bb62c3c25969bdd9e8d7dd24c3ac62bc9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": "~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0",
+                "symfony/css-selector": "^3.4.32 || ^4.4 || ^5.1"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.2.0",
+                "rawr/cross-data-providers": "^2.3.0",
+                "slevomat/coding-standard": "^6.4.1",
+                "squizlabs/php_codesniffer": "^3.5.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "6.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pelago\\Emogrifier\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Zoli Szabó",
+                    "email": "zoli.szabo+github@gmail.com"
+                },
+                {
+                    "name": "John Reeve",
+                    "email": "jreeve@pelagodesign.com"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake@qzdesign.co.uk"
+                },
+                {
+                    "name": "Cameron Brooks"
+                },
+                {
+                    "name": "Jaime Prado"
+                }
+            ],
+            "description": "Converts CSS styles into inline style attributes in your HTML code",
+            "homepage": "https://www.myintervals.com/emogrifier.php",
+            "keywords": [
+                "css",
+                "email",
+                "pre-processing"
+            ],
+            "support": {
+                "issues": "https://github.com/MyIntervals/emogrifier/issues",
+                "source": "https://github.com/MyIntervals/emogrifier"
+            },
+            "time": "2021-04-06T08:18:22+00:00"
         },
         {
             "name": "phenx/php-font-lib",
@@ -8441,6 +8671,54 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.4"
             },
             "time": "2021-12-08T09:12:39+00:00"
+        },
+        {
+            "name": "tonchik-tm/pdf-to-html",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tonchik-tm/pdf-to-html.git",
+                "reference": "7b823d55d53300e85c6d58ad8626bc3358faeba2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tonchik-tm/pdf-to-html/zipball/7b823d55d53300e85c6d58ad8626bc3358faeba2",
+                "reference": "7b823d55d53300e85c6d58ad8626bc3358faeba2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-fileinfo": "*",
+                "pelago/emogrifier": "^5.0.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "TonchikTm": "src"
+                },
+                "psr-4": {
+                    "TonchikTm\\PdfToHtml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anton Nikolaev",
+                    "email": "tonchik@tonchik.net",
+                    "homepage": "http://www.tonchik.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This PHP class can convert your pdf files to html using poppler-utils.",
+            "support": {
+                "issues": "https://github.com/tonchik-tm/pdf-to-html/issues",
+                "source": "https://github.com/tonchik-tm/pdf-to-html/tree/1.1.0"
+            },
+            "time": "2021-05-13T13:42:51+00:00"
         },
         {
             "name": "twilio/sdk",

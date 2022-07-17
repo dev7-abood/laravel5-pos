@@ -34,6 +34,8 @@ use Illuminate\Http\Request;
 use App\TaxRate;
 use Spatie\Activitylog\Models\Activity;
 
+use App\Services\GeneratePdfPurchasingReport;
+
 class ReportController extends Controller
 {
     /**
@@ -44,6 +46,10 @@ class ReportController extends Controller
     protected $productUtil;
     protected $moduleUtil;
     protected $businessUtil;
+
+    protected $reportQuery;
+
+
 
     /**
      * Create a new controller instance.
@@ -220,6 +226,7 @@ class ReportController extends Controller
                 $contacts->whereIn('contacts.type', [$request->input('contact_type'), 'both']);
             }
 
+            $this->reportQuery = $contacts;
             return Datatables::of($contacts)
                 ->editColumn('name', function ($row) {
                     $name = $row->name;
@@ -335,7 +342,7 @@ class ReportController extends Controller
 
                 return view('product.partials.product_stock_details')->with(compact('product_stock_details'));
             }
-
+            $this->reportQuery = $products;
             $datatable =  Datatables::of($products)
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {
@@ -595,6 +602,8 @@ class ReportController extends Controller
                     $sells->whereDate('transactions.transaction_date', '>=', $start)
                                 ->whereDate('transactions.transaction_date', '<=', $end);
                 }
+
+                $this->reportQuery = $sells;
                 $datatable = Datatables::of($sells);
                 $raw_cols = ['total_before_tax', 'discount_amount', 'contact_name', 'payment_methods'];
                 $group_taxes_array = TaxRate::groupTaxes($business_id);
@@ -973,6 +982,9 @@ class ReportController extends Controller
                 $registers->whereDate('cash_registers.created_at', '>=', $start_date)
                         ->whereDate('cash_registers.created_at', '<=', $end_date);
             }
+
+            $this->reportQuery = $registers;
+
             return Datatables::of($registers)
                 ->editColumn('total_card_payment', function ($row) {
                     return '<span data-orig-value="' . $row->total_card_payment . '" >' . $this->transactionUtil->num_f($row->total_card_payment, true) . ' (' . $row->total_card_slips . ')</span>';
@@ -1300,6 +1312,7 @@ class ReportController extends Controller
             ->groupBy('purchase_lines.exp_date')
             ->groupBy('purchase_lines.lot_number');
 
+            $this->reportQuery = $report;
             return Datatables::of($report)
                 ->editColumn('product', function ($row) {
                     if ($row->product_type == 'variable') {
@@ -1520,7 +1533,7 @@ class ReportController extends Controller
                 $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
             }
             
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('total_sell', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->total_sell . '</span>';
@@ -1609,7 +1622,7 @@ class ReportController extends Controller
             if (!empty($supplier_id)) {
                 $query->where('t.contact_id', $supplier_id);
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
@@ -1747,7 +1760,7 @@ class ReportController extends Controller
             if (!empty($brand_id)) {
                 $query->where('p.brand_id', $brand_id);
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
@@ -1917,7 +1930,7 @@ class ReportController extends Controller
             if (!empty($brand_id)) {
                 $query->where('p.brand_id', $brand_id);
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
@@ -2042,7 +2055,7 @@ class ReportController extends Controller
             ->whereNotNull('pl.lot_number')
             ->groupBy('v.id')
             ->groupBy('pl.lot_number');
-
+            $this->reportQuery = $products;
             return Datatables::of($products)
                 ->editColumn('stock', function ($row) {
                     $stock = $row->stock ? $row->stock : 0 ;
@@ -2176,7 +2189,7 @@ class ReportController extends Controller
             }
 
             $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
-            
+            $this->reportQuery = $query;
             return Datatables::of($query)
                  ->editColumn('ref_no', function ($row) {
                      if (!empty($row->ref_no)) {
@@ -2309,7 +2322,7 @@ class ReportController extends Controller
             if (!empty($request->get('payment_types'))) {
                 $query->where('transaction_payments.method', $request->get('payment_types'));
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                  ->editColumn('invoice_no', function ($row) {
                      if (!empty($row->transaction_id)) {
@@ -2390,7 +2403,7 @@ class ReportController extends Controller
             if (!empty($start_date) && !empty($end_date)) {
                 $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('total_sell', function ($row) {
                     return '<span class="display_currency" data-currency_symbol="true">' . $row->total_sell . '</span>';
@@ -2523,7 +2536,7 @@ class ReportController extends Controller
             if (!empty($brand_id)) {
                 $query->where('p.brand_id', $brand_id);
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
@@ -2642,7 +2655,7 @@ class ReportController extends Controller
             if (!empty($brand_id)) {
                 $query->where('p.brand_id', $brand_id);
             }
-
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('category_name', '{{$category_name ?? __("lang_v1.uncategorized")}}')
                 ->editColumn('brand_name', '{{$brand_name ?? __("lang_v1.no_brand")}}')
@@ -2885,7 +2898,7 @@ class ReportController extends Controller
             'transaction_sell_lines.unit_price_inc_tax',
             DB::raw('CONCAT(COALESCE(ss.first_name, ""), COALESCE(ss.last_name, "")) as service_staff')
         );
-
+        $this->reportQuery = $query;
         $datatable = Datatables::of($query)
             ->editColumn('product_name', function ($row) {
                 $name = $row->product_name;
@@ -3047,7 +3060,7 @@ class ReportController extends Controller
             ->addSelect("CU.name as customer" , "CU.supplier_business_name")
                 ->groupBy('sale.contact_id');
         }
-
+        $this->reportQuery = $query;
         $datatable = Datatables::of($query);
 
         if (in_array($by, ['invoice'])) {
@@ -3219,6 +3232,7 @@ class ReportController extends Controller
                 $query->where('purchase.type', 'production_purchase');
             }
 
+            $this->reportQuery = $query;
             return Datatables::of($query)
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
@@ -3367,7 +3381,7 @@ class ReportController extends Controller
             if (!auth()->user()->can('purchase.view') && auth()->user()->can('view_own_purchase')) {
                 $purchases->where('transactions.created_by', request()->session()->get('user.id'));
             }
-
+            $this->reportQuery = $purchases;
             return Datatables::of($purchases)
                 ->removeColumn('id')
                 ->editColumn(
@@ -3558,6 +3572,7 @@ class ReportController extends Controller
             $shipping_statuses = $this->transactionUtil->shipping_statuses();
 
             $statuses = array_merge($sell_statuses, $sales_order_statuses, $purchase_statuses);
+            $this->reportQuery = $activities;
             return Datatables::of($activities)
                             ->editColumn('created_at', '{{@format_datetime($created_at)}}')
                             ->addColumn('subject_type', function($row) use($transaction_types) {
@@ -3628,4 +3643,16 @@ class ReportController extends Controller
 
                            
     }
+
+
+    public function genPdf(Request $request)
+    {
+//        dd($request->table_names);
+//        dd($request->table_names);
+//      $pdf = new GeneratePdfPurchasingReport($request->table_names, [], [], []);
+        dd($this->reportQuery);
+//      return $pdf->generatePdf();
+//      return response(['data' => $pdfData, 'success'=> true]);
+    }
+
 }
