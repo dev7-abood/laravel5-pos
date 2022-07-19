@@ -62,6 +62,18 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
+                <div class="d-flex justify-content-start">
+                    <button id="print" class="btn btn-primary" type="button">Print</button>
+                </div>
+            <form id="form-print" method="post" action="{{url('/test')}}">
+                @csrf
+                <textarea name="keys" id="keys"></textarea>
+                <textarea name="data" id="data"></textarea>
+                <textarea name="table_footer" id="table-footer"></textarea>
+                <input name="location_id" id="location-id">
+                <input name="print_title" id="print-title" value="تقرير المشتريات">
+                <button type="submit">print</button>
+            </form>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" 
                     id="product_purchase_report_table">
@@ -102,4 +114,45 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script>
+        document.getElementById('print').addEventListener('click', _ => {
+            const keys = [
+                {key: 'product_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'sub_sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'supplier', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'ref_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'purchase_qty', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'quantity_adjusted', value: '', isTotalValue : true, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'unit_purchase_price', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+                {key: 'subtotal', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+
+            ]
+            product_purchase_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            // function isHTML(str) {
+            //     const doc = new DOMParser().parseFromString(str, "text/html");
+            //     return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
+            // }
+            const data = product_purchase_report.data().toArray()
+            const tableFooter = document.querySelector('#product_purchase_report_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+            // console.log(tableFooter)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+
+        })
+    </script>
+
 @endsection

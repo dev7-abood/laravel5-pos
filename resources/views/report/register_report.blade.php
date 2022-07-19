@@ -98,7 +98,7 @@
 
 @endsection
 
-@section('javascript')
+@section('javascrip')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script>
         document.getElementById('print').addEventListener('click', _ => {
@@ -129,27 +129,29 @@
                 }
             }).toArray()
 
-            let data = []
+            // let data = []
 
             function isHTML(str) {
                 const doc = new DOMParser().parseFromString(str, "text/html");
                 return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
             }
-            console.log(register_report_table.data().toArray())
-            register_report_table.data().map((d, index) => {
-                try {
-                    const innerData = []
-                    keys.map((keyItem, keyIndex) => {
-                        let value = d[keys[keyIndex].key]
-                        const key = keys[keyIndex].key
-                        innerData.push({
-                            key,
-                            value
-                        })
-                    })
-                    data = innerData
-                }catch (err){}
-            }).toArray()
+
+            const data = register_report_table.data().toArray()
+
+            // register_report_table.data().map((d, index) => {
+            //     try {
+            //         const innerData = []
+            //         keys.map((keyItem, keyIndex) => {
+            //             let value = d[keys[keyIndex].key]
+            //             const key = keys[keyIndex].key
+            //             innerData.push({
+            //                 key,
+            //                 value
+            //             })
+            //         })
+            //         data = innerData
+            //     }catch (err){}
+            // }).toArray()
 
             console.log(data)
             console.log(keys)

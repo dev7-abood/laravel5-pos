@@ -53,65 +53,44 @@ class GeneratePdfPurchasingReport
         ];
     }
 
+    public $keys = [];
+    public $data = [];
+    public $currency = '';
+    public $tableFooter = '';
+    public $tableTitle = '';
+    public $htmlFooter = '';
+    public $businessData = [];
 
-//    public $header = (object)[
-//        'cr' => '',
-//        'phone_number' => '',
-//        'logo' => '',
-//        'en_title' => '',
-//        'ar_title' => '',
-//
-//    ];
-//
-//    public $footer = (object)[
-//        'en_address' => '',
-//        'ar_address' => '',
-//        'email' => '',
-//        'web_site' => ''
-//    ];
-
-    public $table_keys = [];
-    public $table_names = [];
-
-    public function __constant($table_names)
+    public function __construct($keys, $data, $businessData, $htmlFooter, $tableFooter = null, $tableTitle = null)
     {
-        $this->table_names = $table_names;
-//        $this->table_keys = $table_keys;
+        $this->keys = $keys;
+        $this->data = $data;
+        $this->tableFooter = $tableFooter;
+        $this->tableTitle = $tableTitle;
+        $this->businessData = $businessData;
+        $this->htmlFooter = $htmlFooter;
 
-//        $this->header = $header;
-//        $this->footer = $footer;
+
+        $this->currency = session("currency")["code"];
     }
-
 
     public function htmlFooter()
     {
-        return '<div>
-                 {PAGENO} من {nb}
-                 <hr/>
-                <p style="padding: 2px 10px;text-align: center;font-weight: bold">المملكة العربية السعودية ، الرياض ، حي النرجس ، طريق أنس بن مالك</p>
-                <p style="padding: 2px 10px;text-align: center;font-weight: bold">KSA , Riydh , Narjas Abo bakir seddiq street</p>
-                <p style="padding: 2px 10px;text-align: center;font-weight: bold"><a href="https://www.sahmcloud.com">www.sahmcloud.com</a> , Email: <a style="color: #0c0c0c" href="mailto:info@sahmcloud.com">info@sahmcloud.com</a></p>
-                <br/>
-                <br/>
-                </div>';
+        return $this->htmlFooter ?? '';
     }
 
     public function generatePdf()
     {
-//        return 'https://www.google.com';
-//        dd($this->table_names);
-//        $mpdf = new \Mpdf\Mpdf($this->config());
-//        $mpdf->SetHTMLFooter($this->htmlFooter());
-//        $mpdf->WriteHTML(view('report.pdf.generate-pdf-purchasing-report', [
-////            'table_keys' => $this->table_keys,
-//            'table_names' => $this->table_names,
-////            'header' => $this->header,
-////            'footer' => $this->footer
-//        ]));
-//
-//        Storage::disk('public')->putFile('pdf/filename.pdf', $mpdf->Output('filename.pdf'));
-//       return response(['success' => true, 'file_path' => asset('filename.pdf')]);
-//     return   $mpdf->Output(public_path('pdf\filename.pdf'), public_path('pdf\filename.pdf'));
-
+        $mpdf = new \Mpdf\Mpdf($this->config());
+        $mpdf->SetHTMLFooter($this->htmlFooter());
+        $mpdf->WriteHTML(view('report.pdf.generate-pdf-purchasing-report', [
+            'keys' => $this->keys,
+            'data' => $this->data,
+            'tableFooter' => $this->tableFooter,
+            'currency' => $this->currency == 'SAR' ? 'ريال' : session("currency")["symbol"],
+            'tableTitle' => $this->tableTitle,
+            'businessData' => $this->businessData
+        ]));
+        return $mpdf->Output();
     }
 }

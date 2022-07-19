@@ -79,6 +79,15 @@ class Business extends Model
     }
 
     /**
+     * Get the first Business currency.
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function location()
+    {
+        return $this->hasOne(BusinessLocation::class);
+    }
+
+    /**
      * Get the Business printers.
      */
     public function printers()
