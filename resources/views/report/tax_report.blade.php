@@ -87,6 +87,17 @@
             ><i class="fa fa-print"></i> @lang( 'messages.print' )</button>
         </div>
     </div>
+
+    <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+        @csrf
+        <textarea name="keys" id="keys"></textarea>
+        <textarea name="data" id="data"></textarea>
+        <textarea name="table_footer" id="table-footer"></textarea>
+        <input name="location_id" id="location-id">
+        <input name="print_title" id="print-title" value="">
+        <button type="submit">print</button>
+    </form>
+
     <div class="row">
         <div class="col-md-12">
            <!-- Custom Tabs -->
@@ -152,8 +163,12 @@
                         </table>
                     </div>
                     <div class="tab-pane" id="output_tax_tab">
-                        <table class="table table-bordered table-striped" id="output_tax_table" width="100%">
-                            <thead>
+                        <div id="output_tax_tab_e">
+                            <button onclick="print_2()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                            <br/>
+                            <br/>
+                            <table class="table table-bordered table-striped" id="output_tax_table" width="100%">
+                                <thead>
                                 <tr>
                                     <th>@lang('messages.date')</th>
                                     <th>@lang('sale.invoice_no')</th>
@@ -168,8 +183,8 @@
                                         </th>
                                     @endforeach
                                 </tr>
-                            </thead>
-                            <tfoot>
+                                </thead>
+                                <tfoot>
                                 <tr class="bg-gray font-17 text-center footer-total">
                                     <td colspan="4"><strong>@lang('sale.total'):</strong></td>
                                     <td><span class="display_currency" id="purchase_total" data-currency_symbol ="true"></span></td>
@@ -181,8 +196,9 @@
                                         </td>
                                     @endforeach
                                 </tr>
-                            </tfoot>
-                        </table>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                     <div class="tab-pane" id="expense_tax_tab">
                         <table class="table table-bordered table-striped" id="expense_tax_table" width="100%">
@@ -223,6 +239,9 @@
                                     @php
                                         $tab_data = !empty($value['tab_data']) ? $value['tab_data'] : [];
                                     @endphp
+                                    <button onclick="print_3()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                                <br/>
+                                <br/>
                                     @include($value['tab_content_path'], $tab_data)
                                 @endif
                             @endforeach
@@ -417,4 +436,13 @@
     @endforeach
 @endif
 <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.querySelector('#input_tax_tab .btn-group').innerHTML += '<button onclick="print_1()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+            document.querySelector('#output_tax_tab_e .btn-group').innerHTML += '<button onclick="print_2()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+            document.querySelector('#expense_tax_tab .btn-group').innerHTML += '<button onclick="print_3()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+    </script>
+
 @endsection

@@ -10,6 +10,15 @@
 
 <!-- Main content -->
 <section class="content no-print">
+    <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+        @csrf
+        <textarea name="keys" id="keys"></textarea>
+        <textarea name="data" id="data"></textarea>
+        <textarea name="table_footer" id="table-footer"></textarea>
+        <input name="location_id" id="location-id">
+        <input name="print_title" id="print-title" value="">
+        <button type="submit">print</button>
+    </form>
     <div class="row">
         <div class="col-md-12">
             @component('components.filters', ['title' => __('report.filters')])
@@ -190,9 +199,13 @@
                             </table>
                         </div>
                     </div>
-                    @include('report.partials.product_sell_report_by_category')
+                    <div id="product_sell_report_by_category_e">
+                        @include('report.partials.product_sell_report_by_category')
+                    </div>
 
+                    <div id="product_sell_report_by_brand_e">
                     @include('report.partials.product_sell_report_by_brand')
+                    </div>
                 </div>
             </div>
         </div>
@@ -331,5 +344,163 @@
                     }
                 });
             });
+    </script>
+
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.querySelector('#psr_detailed_tab .dt-buttons').innerHTML += '<button onclick="print_1()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+            document.querySelector('#psr_detailed_with_purchase_tab .dt-buttons').innerHTML += '<button onclick="print_2()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+            document.querySelector('#psr_grouped_tab .dt-buttons').innerHTML += '<button onclick="print_3()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+            document.querySelector('#product_sell_report_by_category_e .dt-buttons').innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+            document.querySelector('#product_sell_report_by_brand_e .dt-buttons').innerHTML += '<button onclick="print_5()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+
+        function print_1(){
+            const keys = [
+                {key: 'product_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'sub_sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'customer', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'contact_id', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'sell_qty', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'unit_price', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'discount_amount', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'tax', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'unit_sale_price', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'subtotal', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+
+            ]
+            product_sell_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = product_sell_report.data().toArray()
+            const tableFooter = document.querySelector('#product_sell_report_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقارير مبيعات المنتجات | مفصلة'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function print_2(){
+            const keys = [
+                {key: 'product_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'sub_sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'customer', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'ref_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'lot_number', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'supplier_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'purchase_quantity', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false}
+
+            ]
+            product_sell_report_with_purchase_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = product_sell_report_with_purchase_table.data().toArray()
+            // const tableFooter = document.querySelector('#product_sell_report_with_purchase_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            // document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقارير مبيعات المنتجات | مفصلة'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function print_3(){
+            const keys = [
+                {key: 'product_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'sub_sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'current_stock', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'total_qty_sold', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'subtotal', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+
+            ]
+            product_sell_grouped_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = product_sell_grouped_report.data().toArray()
+            const tableFooter = document.querySelector('#product_sell_grouped_report_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقارير مبيعات المنتجات | بالتصنيف'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function print_5(){
+            const keys = [
+                {key: 'product_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'sub_sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'current_stock', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'total_qty_sold', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'subtotal', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+
+            ]
+            product_sell_grouped_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = product_sell_grouped_report.data().toArray()
+            const tableFooter = document.querySelector('#product_sell_grouped_report_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقارير مبيعات المنتجات | حسب العلامة التجارية'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
     </script>
 @endsection

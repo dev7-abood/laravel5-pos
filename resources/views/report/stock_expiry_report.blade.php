@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', __('report.stock_expiry_report'))
-
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -70,6 +76,15 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
+                <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+                    @csrf
+                    <textarea name="keys" id="keys"></textarea>
+                    <textarea name="data" id="data"></textarea>
+                    <textarea name="table_footer" id="table-footer"></textarea>
+                    <input name="location_id" id="location-id">
+                    <input name="print_title" id="print-title" value="">
+                    <button type="submit">print</button>
+                </form>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped" id="stock_expiry_report_table">
                     <thead>
@@ -106,4 +121,47 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+        function print(){
+            const keys = [
+                {key: 'product', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 1},
+                {key: 'sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 2},
+                {key: 'location', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 3},
+                {key: 'stock_left', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 4},
+                {key: 'lot_number', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'exp_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'mfg_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5}
+                // {key: 'purchase', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+
+            ]
+            stock_expiry_report_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = stock_expiry_report_table.data().toArray()
+            const tableFooter = document.querySelector('#stock_expiry_report_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقرير انتهاء صلاحية المخزون'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+    </script>
 @endsection

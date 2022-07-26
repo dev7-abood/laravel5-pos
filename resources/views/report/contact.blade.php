@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', __('report.customer') . ' - ' . __('report.supplier') . ' ' . __('report.reports'))
-
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -40,6 +46,15 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
+                <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+                    @csrf
+                    <textarea name="keys" id="keys"></textarea>
+                    <textarea name="data" id="data"></textarea>
+                    <textarea name="table_footer" id="table-footer"></textarea>
+                    <input name="location_id" id="location-id">
+                    <input name="print_title" id="print-title" value="">
+                    <button type="submit">print</button>
+                </form>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped" id="supplier_report_tbl">
                     <thead>
@@ -76,4 +91,46 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+        function print(){
+            const keys = [
+                {key: 'name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 1},
+                {key: 'total_purchase', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 2},
+                {key: 'total_purchase_return', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 3},
+                {key: 'total_invoice', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 4},
+                {key: 'total_sell_return', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'opening_balance_due', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'due', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+
+            ]
+            supplier_report_tbl.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = supplier_report_tbl.data().toArray()
+            const tableFooter = document.querySelector('#supplier_report_tbl tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقرير الموردين والعملاء'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+    </script>
 @endsection

@@ -11,6 +11,15 @@
 
 <!-- Main content -->
 <section class="content">
+    <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+        @csrf
+        <textarea name="keys" id="keys"></textarea>
+        <textarea name="data" id="data"></textarea>
+        <textarea name="table_footer" id="table-footer"></textarea>
+        <input name="location_id" id="location-id">
+        <input name="print_title" id="print-title" value="">
+        <button type="submit">print</button>
+    </form>
     <div class="print_section"><h2>{{session()->get('business.name')}} - @lang( 'report.profit_loss' )</h2></div>
     
     <div class="row no-print">
@@ -56,7 +65,7 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#profit_by_products" data-toggle="tab" aria-expanded="true"><i class="fa fa-cubes" aria-hidden="true"></i> @lang('lang_v1.profit_by_products')</a>
+                        <a href="#profit_by_products"  data-toggle="tab" aria-expanded="true"><i class="fa fa-cubes" aria-hidden="true"></i> @lang('lang_v1.profit_by_products')</a>
                     </li>
 
                     <li>
@@ -76,13 +85,13 @@
                     </li>
 
                     <li>
-                        <a href="#profit_by_date" data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_date')</a>
+                        <a href="#profit_by_date "  data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_date')</a>
                     </li>
                     <li>
                         <a href="#profit_by_customer" data-toggle="tab" aria-expanded="true"><i class="fa fa-user" aria-hidden="true"></i> @lang('lang_v1.profit_by_customer')</a>
                     </li>
                     <li>
-                        <a href="#profit_by_day" data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_day')</a>
+                        <a href="#profit_by_day"  data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_day')</a>
                     </li>
                 </ul>
 
@@ -92,31 +101,51 @@
                     </div>
 
                     <div class="tab-pane" id="profit_by_categories">
+                        <button onclick="profit_by_products()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                         @include('report.partials.profit_by_categories')
                     </div>
 
                     <div class="tab-pane" id="profit_by_brands">
+                        <button onclick="profit_by_brands()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                         @include('report.partials.profit_by_brands')
                     </div>
 
                     <div class="tab-pane" id="profit_by_locations">
+                        <button onclick="profit_by_locations()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                         @include('report.partials.profit_by_locations')
                     </div>
 
                     <div class="tab-pane" id="profit_by_invoice">
+                        <button onclick="profit_by_invoice()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                         @include('report.partials.profit_by_invoice')
                     </div>
 
                     <div class="tab-pane" id="profit_by_date">
+                        <button onclick="profit_by_date()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                         @include('report.partials.profit_by_date')
                     </div>
 
                     <div class="tab-pane" id="profit_by_customer">
+                        <button onclick="profit_by_customer()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                         @include('report.partials.profit_by_customer')
                     </div>
 
                     <div class="tab-pane" id="profit_by_day">
-                        
+                        <button onclick="profit_by_day()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+                        <br/>
+                        <br/>
                     </div>
                 </div>
             </div>
@@ -378,4 +407,255 @@
     });
 </script>
 
+    <script>
+
+        $(document).ready(function (){
+            document.querySelector('#profit_by_products .btn-group').innerHTML += '<button onclick="profit_by_products()"  class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>';
+        })
+
+
+        function profit_by_products(){
+            const keys = [
+                {key: 'product', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+
+
+            ]
+            profit_by_products_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_products_table.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_products_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقرير الربح من المنتجات'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_categories(){
+            const keys = [
+                {key: 'category', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+            profit_by_categories_datatable.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_categories_datatable.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_categories_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح حسب الفئات'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_brands(){
+            const keys = [
+                {key: 'brand', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+
+            profit_by_brands_datatable.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_brands_datatable.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_brands_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح من العلامات التجارية'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_locations(){
+            const keys = [
+                {key: 'location', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+
+            profit_by_locations_datatable.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_locations_datatable.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_locations_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح حسب الفرع'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_invoice(){
+            const keys = [
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+
+            profit_by_invoice_datatable.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_invoice_datatable.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_invoice_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح عن طريق الفاتورة'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_date(){
+            const keys = [
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+
+
+            profit_by_date_datatable.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_date_datatable.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_date_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح حسب التاريخ'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_customer(){
+            const keys = [
+                {key: 'customer', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+
+            profit_by_customers_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_customers_table.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_customer_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح من قبل العملاء'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function profit_by_day(){
+            const keys = [
+                {key: 'day', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'gross_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+            ]
+
+            profit_by_days_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = profit_by_days_table.data().toArray()
+            const tableFooter = document.querySelector('#profit_by_day_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'الربح بعد يوم'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+    </script>
 @endsection
+@stack('script')

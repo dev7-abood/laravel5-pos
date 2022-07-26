@@ -18,3 +18,10 @@
         @lang('lang_v1.profit_note')
     </p>
 </div>
+@push('script')
+    <script>
+        $(document).ready(function (){
+            document.querySelector('#profit_by_products .btn-group').innerHTML += '<button onclick="profit_by_products()"  class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>';
+        })
+    </script>
+@endpush

@@ -1,4 +1,14 @@
 @extends('layouts.app')
+
+@section('css')
+    <style>
+         .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
+
+
 @section('title', __('lang_v1.product_purchase_report'))
 
 @section('content')
@@ -62,10 +72,7 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
-                <div class="d-flex justify-content-start">
-                    <button id="print" class="btn btn-primary" type="button">Print</button>
-                </div>
-            <form id="form-print" method="post" action="{{url('/test')}}">
+            <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
                 @csrf
                 <textarea name="keys" id="keys"></textarea>
                 <textarea name="data" id="data"></textarea>
@@ -114,8 +121,14 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+
     <script>
-        document.getElementById('print').addEventListener('click', _ => {
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+
+        });
+
+        function print(){
             const keys = [
                 {key: 'product_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
                 {key: 'sub_sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
@@ -145,14 +158,53 @@
 
             console.log(data)
             console.log(keys)
-            // console.log(tableFooter)
 
             document.getElementById('keys').innerText = JSON.stringify(keys)
             document.getElementById('data').innerText = JSON.stringify(data)
             document.getElementById('table-footer').innerText = tableFooter
             document.getElementById('location-id').defaultValue  = locationId
 
-        })
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+
+        function sr_sales_with_commission_table_print(){
+            const keys = [
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'business_location', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'payment_status', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'final_total', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+                {key: 'total_paid', value: '', isTotalValue : true, isHtmlValue : false, isCurrency : true, isCount : true},
+                {key: 'total_remaining', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+            ]
+            sr_sales_commission_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = sr_sales_commission_report.data().toArray()
+            const tableFooter = document.querySelector('#sr_sales_with_commission_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
     </script>
 
 @endsection

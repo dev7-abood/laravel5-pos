@@ -1,6 +1,14 @@
 @extends('layouts.app')
 @section('title', __('report.register_report'))
 
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
+
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -39,9 +47,15 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
-                <div class="d-flex justify-content-start">
-                    <button id="print" class="btn btn-primary" type="button">Print</button>
-                </div>
+                <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+                    @csrf
+                    <textarea name="keys" id="keys"></textarea>
+                    <textarea name="data" id="data"></textarea>
+                    <textarea name="table_footer" id="table-footer"></textarea>
+                    <input name="location_id" id="location-id">
+                    <input name="print_title" id="print-title" value="">
+                    <button type="submit">print</button>
+                </form>
                 <table class="table table-bordered table-striped" id="register_report_table">
                     <thead>
                         <tr>
@@ -91,6 +105,7 @@
         </div>
     </div>
 </section>
+<button onclick="print()"  id="print" class="" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
 <!-- /.content -->
 <div class="modal fade view_register" tabindex="-1" role="dialog" 
     aria-labelledby="gridSystemModalLabel">
@@ -98,29 +113,34 @@
 
 @endsection
 
-@section('javascrip')
+@section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script>
-        document.getElementById('print').addEventListener('click', _ => {
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+        function print(){
             const keys = [
-                {key: 'created_at', value: '', isTotalValue : true, isHtmlValue : false},
-                {key: 'closed_at', value: '', isTotalValue : true, isHtmlValue : false},
-                {key: 'location_name', value: '', isTotalValue : true, isHtmlValue : false},
-                {key: 'user_name', value: '', isTotalValue : true, isHtmlValue : false},
-                {key: 'total_card_payment', value: '', isTotalValue : true, isHtmlValue : true},
-                {key: 'total_cheque_payment', value: '', isTotalValue : true, isHtmlValue : true},
-                {key: 'total_cash_payment', value: '', isTotalValue : true, isHtmlValue : true},
-                {key: 'total_bank_transfer_payment', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_advance_payment', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_1', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_2', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_3', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_4', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_5', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_6', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_custom_pay_7', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total_other_payment', value: '', isTotalValue : true , isHtmlValue : true},
-                {key: 'total', value: '', isTotalValue : true, isHtmlValue : true},
+                {key: 'created_at', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'closed_at', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'location_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'user_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'total_card_payment', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'total_cheque_payment', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'total_bank_transfer_payment', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_advance_payment', value: '', isTotalValue : true, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_1', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_2', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_3', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_4', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_5', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_6', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_custom_pay_7', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_other_payment', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'action', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true}
+
             ]
             register_report_table.columns().header().map((d, index) => {
                 try {
@@ -129,45 +149,23 @@
                 }
             }).toArray()
 
-            // let data = []
-
-            function isHTML(str) {
-                const doc = new DOMParser().parseFromString(str, "text/html");
-                return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
-            }
-
             const data = register_report_table.data().toArray()
-
-            // register_report_table.data().map((d, index) => {
-            //     try {
-            //         const innerData = []
-            //         keys.map((keyItem, keyIndex) => {
-            //             let value = d[keys[keyIndex].key]
-            //             const key = keys[keyIndex].key
-            //             innerData.push({
-            //                 key,
-            //                 value
-            //             })
-            //         })
-            //         data = innerData
-            //     }catch (err){}
-            // }).toArray()
+            const tableFooter = document.querySelector('#register_report_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
 
             console.log(data)
             console.log(keys)
 
-            $.ajax({
-                url: '{{url('/test')}}',
-                dataType: "json",
-                type: "Post",
-                async: true,
-                data: { keys, data },
-                success: function (data) {
-                    console.log(data)
-                },
-            });
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقرير المناوبة'
 
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
 
-        })
     </script>
 @endsection

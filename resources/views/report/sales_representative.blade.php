@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', __('report.sales_representative'))
-
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -39,7 +45,15 @@
             @endcomponent
         </div>
     </div>
-
+    <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+        @csrf
+        <textarea name="keys" id="keys"></textarea>
+        <textarea name="data" id="data"></textarea>
+        <textarea name="table_footer" id="table-footer"></textarea>
+        <input name="location_id" id="location-id">
+        <input name="print_title" id="print-title" value="">
+        <button type="submit">print</button>
+    </form>
     <!-- Summary -->
     <div class="row">
         <div class="col-sm-12">
@@ -114,10 +128,13 @@
                     </div>
 
                     <div class="tab-pane" id="sr_commission_tab">
+                        <button onclick="sales_representative_commission()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
                         @include('report.partials.sales_representative_commission')
                     </div>
 
                     <div class="tab-pane" id="sr_expenses_tab">
+                        <button onclick="sales_representative_expenses()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
+
                         @include('report.partials.sales_representative_expenses')
                     </div>
 
@@ -149,4 +166,124 @@
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="sr_sales_report_print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+        function sr_sales_report_print(){
+            const keys = [
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'business_location', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'payment_status', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'final_total', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_paid', value: '', isTotalValue : true, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'total_remaining', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+
+            ]
+            sr_sales_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            // function isHTML(str) {
+            //     const doc = new DOMParser().parseFromString(str, "text/html");
+            //     return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
+            // }
+            const data = sr_sales_report.data().toArray()
+            const tableFooter = document.querySelector('#sr_sales_report tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'المبيعات المضافة'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function sales_representative_commission(){
+            const keys = [
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'business_location', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'payment_status', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'final_total', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+                {key: 'total_paid', value: '', isTotalValue : true, isHtmlValue : false, isCurrency : true, isCount : true},
+                {key: 'total_remaining', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : true},
+
+            ]
+            sr_sales_commission_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = sr_sales_commission_report.data().toArray()
+            const tableFooter = document.querySelector('#sr_sales_with_commission_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'المبيعات إالى العمولة'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+        function sales_representative_expenses(){
+            const keys = [
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'ref_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'category', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'location_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'payment_status', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'final_total', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'expense_for', value: '', isTotalValue : true, isHtmlValue : false, isCurrency : false, isCount : true},
+                {key: 'additional_notes', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : true},
+
+            ]
+            sr_expenses_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = sr_expenses_report.data().toArray()
+            const tableFooter = document.querySelector('#sr_sales_with_commission_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'المصاريف'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+    </script>
 @endsection

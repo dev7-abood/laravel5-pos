@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class GeneratePdfPurchasingReport
 {
@@ -91,6 +92,6 @@ class GeneratePdfPurchasingReport
             'tableTitle' => $this->tableTitle,
             'businessData' => $this->businessData
         ]));
-        return $mpdf->Output();
+        return $mpdf->Output(Carbon::now()->timestamp.'.pdf', \Mpdf\Output\Destination::DOWNLOAD);
     }
 }

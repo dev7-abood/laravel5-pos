@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', __('lang_v1.sell_payment_report'))
-
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -72,6 +78,15 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary'])
+                <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+                    @csrf
+                    <textarea name="keys" id="keys"></textarea>
+                    <textarea name="data" id="data"></textarea>
+                    <textarea name="table_footer" id="table-footer"></textarea>
+                    <input name="location_id" id="location-id">
+                    <input name="print_title" id="print-title" value="">
+                    <button type="submit">print</button>
+                </form>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" 
                     id="sell_payment_report_table">
@@ -111,4 +126,45 @@
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+        function print(){
+            const keys = [
+                {key: 'payment_ref_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'paid_on', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'amount', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : true, isCount : false},
+                {key: 'customer', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'customer_group', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'method', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            ]
+            sell_payment_report.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = sell_payment_report.data().toArray()
+            const tableFooter = document.querySelector('#sell_payment_report_table tfoot').outerHTML.toString();
+            const locationId = $('#sr_business_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقرير المبيعات'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+    </script>
 @endsection

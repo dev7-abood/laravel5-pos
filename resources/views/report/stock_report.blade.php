@@ -1,5 +1,12 @@
 @extends('layouts.app')
 @section('title', __('report.stock_report'))
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 
 @section('content')
 
@@ -10,6 +17,16 @@
 
 <!-- Main content -->
 <section class="content">
+
+    <form class="d-none" id="form-print" method="post" action="{{url('/print-reports')}}">
+        @csrf
+        <textarea name="keys" id="keys"></textarea>
+        <textarea name="data" id="data"></textarea>
+        <textarea name="table_footer" id="table-footer"></textarea>
+        <input name="location_id" id="location-id">
+        <input name="print_title" id="print-title" value="">
+        <button type="submit">print</button>
+    </form>
     <div class="row">
         <div class="col-md-12">
             @component('components.filters', ['title' => __('report.filters')])
@@ -97,4 +114,50 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script>
+        document.addEventListener('readystatechange', event => {
+            document.getElementsByClassName('dt-buttons')[0].innerHTML += '<button onclick="print()"  id="print" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        });
+
+        function print(){
+            const keys = [
+                {key: 'sku', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 1},
+                {key: 'product', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 2},
+                {key: 'location_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 3},
+                {key: 'unit_price', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 4},
+                {key: 'stock', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'stock_price', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'stock_value_by_sale_price', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'potential_profit', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'total_sold', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'total_transfered', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false, index : 5},
+                {key: 'total_adjusted', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+
+            ]
+            stock_report_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = stock_report_table.data().toArray()
+            const tableFooter = document.querySelector('#stock_report_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقرير المخزون'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+
+    </script>
 @endsection

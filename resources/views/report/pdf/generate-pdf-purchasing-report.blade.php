@@ -47,18 +47,23 @@
             <td class="table-none-border">
                 <div>
                     <p style="font-weight: bold">{{$businessData['name'] ?? ''}}</p>
-                    <p>سجل تجاري: 1</p>
-                    <p>0589939393</p>
+                    <br/>
+                    <p>{{$businessData['cr'] ? 'السجل التجاري '.$businessData['cr'] : ''}}</p>
+                    <br/>
+                    <p>{{$businessData['mobile'] ?? ''}}</p>
                 </div>
             </td>
             <td class="table-none-border">
-                <img width="140" height="140" alt="" src="{{public_path('uploads/business_logos/'.$businessData['logo']) ?? ''}}">
+                <img width="140" height="140" alt=""
+                     src="{{public_path('uploads/business_logos/'.$businessData['logo']) ?? ''}}">
             </td>
             <td class="table-none-border">
                 <div>
-                    <p style="font-weight: bold">Comp Perfume Scent G</p>
-                    <p>CR: 10101010101</p>
-                    <p>0595959595</p>
+                    <p style="font-weight: bold">{{$businessData['en_company_name'] ?? ''}}</p>
+                    <br/>
+                    <p>{{$businessData['cr'] ? 'Cr '.$businessData['cr'] : ''}}</p>
+                    <br/>
+                    <p>{{$businessData['mobile'] ?? ''}}</p>
                 </div>
             </td>
         </tr>
@@ -89,17 +94,17 @@
         <thead>
         <tr>
             @foreach($keys as $index => $value)
-            <th>{{$value->value}}</th>
+                <th>{{$value->value}}</th>
             @endforeach
         </tr>
         </thead>
         <tbody>
         @foreach($data as $d)
-        <tr>
-            @foreach($keys as $index => $value)
-                <td>{!! $d->{$value->key} !!} {{$value->isCurrency ? $currency : ''}} </td>
-            @endforeach
-        </tr>
+            <tr>
+                @foreach($keys as $index => $value)
+                    <td>{!! $d->{$value->key} !!} </td>
+                @endforeach
+            </tr>
         @endforeach
         </tbody>
         {!! $tableFooter !!}
