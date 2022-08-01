@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', __( 'report.tax_report' ))
-
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -104,15 +110,15 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#input_tax_tab" data-toggle="tab" aria-expanded="true"><i class="fa fas fa-arrow-circle-down" aria-hidden="true"></i> @lang('report.input_tax')</a>
+                        <a href="#input_tax_tab"  data-toggle="tab" aria-expanded="true"><i class="fa fas fa-arrow-circle-down" aria-hidden="true"></i> @lang('report.input_tax')</a>
                     </li>
 
                     <li>
-                        <a href="#output_tax_tab" data-toggle="tab" aria-expanded="true"><i class="fa fas fa-arrow-circle-up" aria-hidden="true"></i> @lang('report.output_tax')</a>
+                        <a href="#output_tax_tab" onclick="tap1()" data-toggle="tab" aria-expanded="true"><i class="fa fas fa-arrow-circle-up" aria-hidden="true"></i> @lang('report.output_tax')</a>
                     </li>
 
                     <li>
-                        <a href="#expense_tax_tab" data-toggle="tab" aria-expanded="true"><i class="fa fas fa-minus-circle" aria-hidden="true"></i> @lang('lang_v1.expense_tax')</a>
+                        <a href="#expense_tax_tab" onclick="tap2()" data-toggle="tab" aria-expanded="true"><i class="fa fas fa-minus-circle" aria-hidden="true"></i> @lang('lang_v1.expense_tax')</a>
                     </li>
                     @if(!empty($tax_report_tabs))
                         @foreach($tax_report_tabs as $key => $tabs)
@@ -164,9 +170,6 @@
                     </div>
                     <div class="tab-pane" id="output_tax_tab">
                         <div id="output_tax_tab_e">
-                            <button onclick="print_2()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                            <br/>
-                            <br/>
                             <table class="table table-bordered table-striped" id="output_tax_table" width="100%">
                                 <thead>
                                 <tr>
@@ -440,9 +443,149 @@
     <script>
         document.addEventListener('readystatechange', event => {
             document.querySelector('#input_tax_tab .btn-group').innerHTML += '<button onclick="print_1()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
-            document.querySelector('#output_tax_tab_e .btn-group').innerHTML += '<button onclick="print_2()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
-            document.querySelector('#expense_tax_tab .btn-group').innerHTML += '<button onclick="print_3()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
         });
+    </script>
+
+
+
+    <script>
+        function print_1(){
+            const keys = [
+                {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'ref_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'contact_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'tax_number', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'total_before_tax', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'payment_methods', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                {key: 'discount_amount', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                @foreach($taxes as $tax)
+                { key: "tax_{{$tax['id']}}", searchable: false, orderable: false },
+                @endforeach
+            ]
+            input_tax_table.columns().header().map((d, index) => {
+                try {
+                    keys[index].value = d.textContent
+                }catch (err){
+                }
+            }).toArray()
+
+            const data = input_tax_table.data().toArray()
+            const tableFooter = document.querySelector('#input_tax_table tfoot').outerHTML.toString();
+            const locationId = $('#location_id option:selected').val()
+
+            console.log(data)
+            console.log(keys)
+
+            document.getElementById('keys').innerText = JSON.stringify(keys)
+            document.getElementById('data').innerText = JSON.stringify(data)
+            document.getElementById('table-footer').innerText = tableFooter
+            document.getElementById('location-id').defaultValue  = locationId
+            document.getElementById('print-title').defaultValue  = 'تقارير الضرائب | ضريبة الدخل'
+
+            setTimeout(_ => {
+                document.getElementById('form-print').submit()
+            }, 1000)
+        }
+    </script>
+
+<script>
+    function print_2(){
+        const keys = [
+            {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'invoice_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'contact_name', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'tax_number', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'total_before_tax', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'payment_methods', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'discount_amount', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                @foreach($taxes as $tax)
+            { key: "tax_{{$tax['id']}}", searchable: false, orderable: false },
+            @endforeach
+        ]
+        output_tax_datatable.columns().header().map((d, index) => {
+            try {
+                keys[index].value = d.textContent
+            }catch (err){
+            }
+        }).toArray()
+
+        const data = output_tax_datatable.data().toArray()
+        const tableFooter = document.querySelector('#output_tax_table tfoot').outerHTML.toString();
+        const locationId = $('#location_id option:selected').val()
+
+        console.log(data)
+        console.log(keys)
+
+        document.getElementById('keys').innerText = JSON.stringify(keys)
+        document.getElementById('data').innerText = JSON.stringify(data)
+        document.getElementById('table-footer').innerText = tableFooter
+        document.getElementById('location-id').defaultValue  = locationId
+        document.getElementById('print-title').defaultValue  = 'تقارير الضرائب | ضريبة الانتاج'
+
+        setTimeout(_ => {
+            document.getElementById('form-print').submit()
+        }, 1000)
+    }
+</script>
+
+<script>
+    function print_3(){
+        const keys = [
+            {key: 'transaction_date', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'ref_no', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'tax_number', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'total_before_tax', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+            {key: 'payment_methods', value: '', isTotalValue : false, isHtmlValue : false, isCurrency : false, isCount : false},
+                @foreach($taxes as $tax)
+            { key: "tax_{{$tax['id']}}", searchable: false, orderable: false },
+            @endforeach
+        ]
+        expense_tax_datatable.columns().header().map((d, index) => {
+            try {
+                keys[index].value = d.textContent
+            }catch (err){
+            }
+        }).toArray()
+
+        const data = expense_tax_datatable.data().toArray()
+        const tableFooter = document.querySelector('#expense_tax_table tfoot').outerHTML.toString();
+        const locationId = $('#location_id option:selected').val()
+
+        console.log(data)
+        console.log(keys)
+
+        document.getElementById('keys').innerText = JSON.stringify(keys)
+        document.getElementById('data').innerText = JSON.stringify(data)
+        document.getElementById('table-footer').innerText = tableFooter
+        document.getElementById('location-id').defaultValue  = locationId
+        document.getElementById('print-title').defaultValue  = 'تقارير الضرائب | ضريبة النفقات'
+
+        setTimeout(_ => {
+            document.getElementById('form-print').submit()
+        }, 1000)
+    }
+</script>
+
+    <script>
+        let tap_1 = 0
+        function tap1(){
+            tap_1++
+            if (tap_1 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#output_tax_tab .btn-group').innerHTML += '<button onclick="print_2()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
+
+        let tap_2 = 0
+        function tap2(){
+            tap_2++
+            if (tap_2 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#expense_tax_tab .btn-group').innerHTML += '<button onclick="print_3()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
     </script>
 
 @endsection

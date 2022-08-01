@@ -69,29 +69,29 @@
                     </li>
 
                     <li>
-                        <a href="#profit_by_categories" data-toggle="tab" aria-expanded="true"><i class="fa fa-tags" aria-hidden="true"></i> @lang('lang_v1.profit_by_categories')</a>
+                        <a href="#profit_by_categories" onclick="tap2()" data-toggle="tab" aria-expanded="true"><i class="fa fa-tags" aria-hidden="true"></i> @lang('lang_v1.profit_by_categories')</a>
                     </li>
 
                     <li>
-                        <a href="#profit_by_brands" data-toggle="tab" aria-expanded="true"><i class="fa fa-diamond" aria-hidden="true"></i> @lang('lang_v1.profit_by_brands')</a>
+                        <a href="#profit_by_brands" onclick="tap3()"  data-toggle="tab" aria-expanded="true"><i class="fa fa-diamond" aria-hidden="true"></i> @lang('lang_v1.profit_by_brands')</a>
                     </li>
 
                     <li>
-                        <a href="#profit_by_locations" data-toggle="tab" aria-expanded="true"><i class="fa fa-map-marker" aria-hidden="true"></i> @lang('lang_v1.profit_by_locations')</a>
+                        <a href="#profit_by_locations" onclick="tap4()"  data-toggle="tab" aria-expanded="true"><i class="fa fa-map-marker" aria-hidden="true"></i> @lang('lang_v1.profit_by_locations')</a>
                     </li>
 
                     <li>
-                        <a href="#profit_by_invoice" data-toggle="tab" aria-expanded="true"><i class="fa fa-file-alt" aria-hidden="true"></i> @lang('lang_v1.profit_by_invoice')</a>
+                        <a href="#profit_by_invoice" onclick="tap5()"  data-toggle="tab" aria-expanded="true"><i class="fa fa-file-alt" aria-hidden="true"></i> @lang('lang_v1.profit_by_invoice')</a>
                     </li>
 
                     <li>
-                        <a href="#profit_by_date "  data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_date')</a>
+                        <a href="#profit_by_date " onclick="tap6()"  data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_date')</a>
                     </li>
                     <li>
-                        <a href="#profit_by_customer" data-toggle="tab" aria-expanded="true"><i class="fa fa-user" aria-hidden="true"></i> @lang('lang_v1.profit_by_customer')</a>
+                        <a href="#profit_by_customer" onclick="tap7()"  data-toggle="tab" aria-expanded="true"><i class="fa fa-user" aria-hidden="true"></i> @lang('lang_v1.profit_by_customer')</a>
                     </li>
                     <li>
-                        <a href="#profit_by_day"  data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_day')</a>
+                        <a href="#profit_by_day" onclick="tap8()"  data-toggle="tab" aria-expanded="true"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('lang_v1.profit_by_day')</a>
                     </li>
                 </ul>
 
@@ -656,6 +656,18 @@
             }, 1000)
         }
 
+    </script>
+
+    <script>
+        let tap_2 = 0
+        function tap2(){
+            tap_2++
+            if (tap_2 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#profit_by_products .btn-group').innerHTML += '<button onclick="profit_by_categories()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
     </script>
 @endsection
 @stack('script')

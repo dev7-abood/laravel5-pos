@@ -15,16 +15,14 @@ class PrintReportsController extends Controller
        $tableFooter = $request->table_footer;
        $tableTitle = $request->table_title;
 
-//       dd($data);
+       $business_id = session()->get('user.business_id');
 
-      $business_id = session()->get('user.business_id');
-
-      $businessData = Business::query()->find($business_id);
-        if ($request->location_id && $request->location_id != 'undefined'){
+       $businessData = Business::query()->find($business_id);
+         if ($request->location_id && $request->location_id != 'undefined'){
             $businessLocation = BusinessLocation::query()->find($request->location_id);
-        }else{
+         }else{
             $businessLocation = $businessData->location;
-        }
+         }
 
       $businessData = [
           'logo' => $businessData->logo ?? '',
