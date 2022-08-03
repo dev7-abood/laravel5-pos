@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', __( 'report.profit_loss' ))
-
+@section('css')
+    <style>
+        .buttons-print {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -101,51 +107,30 @@
                     </div>
 
                     <div class="tab-pane" id="profit_by_categories">
-                        <button onclick="profit_by_products()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                         @include('report.partials.profit_by_categories')
                     </div>
 
                     <div class="tab-pane" id="profit_by_brands">
-                        <button onclick="profit_by_brands()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                         @include('report.partials.profit_by_brands')
                     </div>
 
                     <div class="tab-pane" id="profit_by_locations">
-                        <button onclick="profit_by_locations()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                         @include('report.partials.profit_by_locations')
                     </div>
 
                     <div class="tab-pane" id="profit_by_invoice">
-                        <button onclick="profit_by_invoice()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                         @include('report.partials.profit_by_invoice')
                     </div>
 
                     <div class="tab-pane" id="profit_by_date">
-                        <button onclick="profit_by_date()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                         @include('report.partials.profit_by_date')
                     </div>
 
                     <div class="tab-pane" id="profit_by_customer">
-                        <button onclick="profit_by_customer()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                         @include('report.partials.profit_by_customer')
                     </div>
 
                     <div class="tab-pane" id="profit_by_day">
-                        <button onclick="profit_by_day()"  class="btn btn-default buttons-collection buttons-colvis btn-sm my-4" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>
-                        <br/>
-                        <br/>
                     </div>
                 </div>
             </div>
@@ -664,10 +649,72 @@
             tap_2++
             if (tap_2 === 1){
                 setTimeout(_ => {
-                    document.querySelector('#profit_by_products .btn-group').innerHTML += '<button onclick="profit_by_categories()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                    document.querySelector('#profit_by_categories .btn-group').innerHTML += '<button onclick="profit_by_categories()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
                 }, 1000)
             }
         }
+
+        let tap_3 = 0
+        function tap3(){
+            tap_3++
+            if (tap_3 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#profit_by_brands .btn-group').innerHTML += '<button onclick="profit_by_brands()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
+
+        let tap_4 = 0
+        function tap4(){
+            tap_4++
+            if (tap_4 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#profit_by_locations .btn-group').innerHTML += '<button onclick="profit_by_locations()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
+
+        let tap_5 = 0
+        function tap5(){
+            tap_5++
+            if (tap_5 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#profit_by_invoice .btn-group').innerHTML += '<button onclick="profit_by_invoice()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
+
+        let tap_6 = 0
+        function tap6(){
+            tap_6++
+            if (tap_6 === 1){
+                setTimeout(_ => {
+                    document.querySelector('#profit_by_date .btn-group').innerHTML += '<button onclick="profit_by_invoice()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+                }, 1000)
+            }
+        }
+
+        // let tap_7 = 0
+        // function tap7(){
+        //     tap_7++
+        //     if (tap_7 === 1){
+        //         setTimeout(_ => {
+        //             document.querySelector('#profit_by_customer .btn-group').innerHTML += '<button onclick="profit_by_invoice()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        //         }, 1000)
+        //     }
+        // }
+
+        // let tap_8 = 0
+        // function tap8(){
+        //     tap_8++
+        //     if (tap_8 === 1){
+        //         setTimeout(_ => {
+        //             document.querySelector('#profit_by_day .btn-group').innerHTML += '<button onclick="profit_by_day()" class="btn btn-default buttons-collection buttons-colvis btn-sm" type="button"><span><i class="fa fa-print" aria-hidden="true"></i> طباعة</span></button>'
+        //         }, 1000)
+        //     }
+        // }
+
+
     </script>
 @endsection
 @stack('script')
